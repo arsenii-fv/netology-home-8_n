@@ -1,0 +1,14 @@
+---
+  - name: Print os facts
+    hosts:  all
+    tasks:
+      # - docker_container:
+      #     name: ubuntu
+      #     image: ubuntu:latest
+      - name: Print OS
+        debug:
+          msg: "{{ ansible_distribution }}"
+      - name: Print fact
+        debug:
+          msg: "{{ some_fact }}"
+        
