@@ -2,12 +2,14 @@
 
 ## Основная часть
 1. Попробуйте запустить playbook на окружении из `test.yml`, зафиксируйте какое значение имеет факт `some_fact` для указанного хоста при выполнении playbook'a.
+
 arsen@lite:~/08-ansible/work8_1.1/playbook$ ansible-playbook -i inventory/test.yml site.yml
 TASK [Print fact]***********************************************************************
 ok: [localhost] => {
     "msg": 12
 
 2. Найдите файл с переменными (group_vars) в котором задаётся найденное в первом пункте значение и поменяйте его на 'all default fact'.
+
 TASK [Print fact] ***********************************************************************
 ok: [localhost] => {
     "msg": "all default fact"
@@ -16,6 +18,7 @@ ok: [localhost] => {
 
 
 4. Проведите запуск playbook на окружении из `prod.yml`. Зафиксируйте полученные значения `some_fact` для каждого из `managed host`.
+
 arsen@lite:~/08-ansible/work8_1.1/playbook$ ansible-playbook -i inventory/prod.yml site.yml 
 TASK [Print fact] *************************************************************************
 ok: [centos7] => {
