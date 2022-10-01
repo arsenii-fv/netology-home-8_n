@@ -2,7 +2,7 @@
 
 ## Основная часть
 1. Попробуйте запустить playbook на окружении из `test.yml`, зафиксируйте какое значение имеет факт `some_fact` для указанного хоста при выполнении playbook'a.
-```bash
+```
 arsen@lite:~/08-ansible/work8_1.1/playbook$ ansible-playbook -i inventory/test.yml site.yml
 TASK [Print fact]***********************************************************************
 ok: [localhost] => {
