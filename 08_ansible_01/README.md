@@ -19,6 +19,54 @@ ok: [localhost] => {
 
 4. Проведите запуск playbook на окружении из `prod.yml`. Зафиксируйте полученные значения `some_fact` для каждого из `managed host`.
 ```bash
+
+arsen@lite:~/08-ansible/work8_1.1/playbook$ ansible-playbook -i inventory/prod.yml site.yml 
+
+PLAY [Docker create and started] ************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************
+ok: [localhost]
+
+TASK [Ubuntu] *******************************************************************************************************************************************
+changed: [localhost]
+
+TASK [Centos] *******************************************************************************************************************************************
+changed: [localhost]
+
+PLAY [Print os facts] ***********************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************
+fatal: [ubuntu]: UNREACHABLE! => {"changed": false, "msg": "Failed to create temporary directory. In some cases, you may have been able to authenticate and did not have permissions on the target directory. Consider changing the remote tmp path in ansible.cfg to a path rooted in \"/tmp\", for more error information use -vvv. Failed command was: ( umask 77 && mkdir -p \"` echo ~/.ansible/tmp `\"&& mkdir \"` echo ~/.ansible/tmp/ansible-tmp-1664654002.7522058-12286-86288624588968 `\" && echo ansible-tmp-1664654002.7522058-12286-86288624588968=\"` echo ~/.ansible/tmp/ansible-tmp-1664654002.7522058-12286-86288624588968 `\" ), exited with result 1", "unreachable": true}
+fatal: [centos7]: UNREACHABLE! => {"changed": false, "msg": "Failed to create temporary directory. In some cases, you may have been able to authenticate and did not have permissions on the target directory. Consider changing the remote tmp path in ansible.cfg to a path rooted in \"/tmp\", for more error information use -vvv. Failed command was: ( umask 77 && mkdir -p \"` echo ~/.ansible/tmp `\"&& mkdir \"` echo ~/.ansible/tmp/ansible-tmp-1664654002.8420618-12285-75704378281363 `\" && echo ansible-tmp-1664654002.8420618-12285-75704378281363=\"` echo ~/.ansible/tmp/ansible-tmp-1664654002.8420618-12285-75704378281363 `\" ), exited with result 1", "unreachable": true}
+ok: [local-host]
+
+TASK [Print OS] *****************************************************************************************************************************************
+ok: [local-host] => {
+    "msg": "Debian"
+}
+
+TASK [Print fact] ***************************************************************************************************************************************
+ok: [local-host] => {
+    "msg": "local default fact"
+}
+
+PLAY [Docker stop] **************************************************************************************************************************************
+
+TASK [Gathering Facts] **********************************************************************************************************************************
+ok: [localhost]
+
+TASK [Centos] *******************************************************************************************************************************************
+ok: [localhost]
+
+TASK [Ubuntu] *******************************************************************************************************************************************
+ok: [localhost]
+
+PLAY RECAP **********************************************************************************************************************************************
+centos7                    : ok=0    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0   
+local-host                 : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+localhost                  : ok=6    changed=2    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+ubuntu                     : ok=0    changed=0    unreachable=1    failed=0    skipped=0    rescued=0    ignored=0  
+
 arsen@lite:~/08-ansible/work8_1.1/playbook$ ansible-playbook -i inventory/prod.yml site.yml 
 TASK [Print fact] *************************************************************************
 ok: [centos7] => {
