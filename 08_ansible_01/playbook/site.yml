@@ -1,0 +1,69 @@
+---
+  - name: Docker create and started
+    hosts: localhost
+    gather_facts: true
+    #become: true
+    tasks:
+      - name: Ubuntu  
+        docker_container:
+          name: ubuntu
+          image: ubuntu:latest
+          state: started
+          detach: true
+        register: results 
+          #command: ["sleep", "1d"]
+      - name: Centos 
+        docker_container:
+          name: centos7
+          image: centos:7
+          state: started
+          detach: true
+        register: results 
+        #  command: ["sleep", "1d"]          
+      
+  - name: Print os facts
+    gather_facts: true
+    hosts: all
+    tasks: 
+      - name: Print OS
+        debug:
+          msg: "{{ ansible_distribution }}"
+        # when:  results is not defined
+
+      - name: Print fact
+        debug:
+          msg: "{{ some_fact }}"
+
+      # - name: Output container results
+      #   debug:
+      #     msg: "{{ item }}"
+      #   with_items:
+      #     - "{{ results.ansible_facts.docker_container.Id }}"
+      #     - "{{ results.ansible_facts.docker_container.State.Status }}"
+      #     - "{{ results.ansible_facts.docker_container.NetworkSettings.Networks.bridge.IPAddress }}"    
+      
+      # - name: Get facts about containers
+      #   local_action:
+      #     module: docker_facts
+
+      # - name: another facts test
+      #   debug: msg="Container {{ item.key }}"
+      #   with_dict: docker_containers
+
+  - name: Docker stop 
+    hosts: localhost
+    tasks:
+      - name: Centos 
+        docker_container:
+          name: centos
+          image: centos:7
+          state: stopped
+          # command: ["sleep", "1d"]    
+
+      - name: Ubuntu  
+        docker_container:
+          name: ubuntu
+          image: ubuntu:latest
+          state: stopped
+          # command: ["sleep", "1d"]
+ 

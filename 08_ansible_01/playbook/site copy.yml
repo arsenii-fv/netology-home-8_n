@@ -1,0 +1,76 @@
+---
+  - name: Docker create and started
+    hosts: localhost
+   #gather_facts: false
+    #become: true
+    tasks:
+      - name: Ubuntu  
+        docker_container:
+          name: ubuntu
+          image: ubuntu:latest
+          #state: started
+          command: ["sleep", "1d"]
+      - name: Centos 
+        docker_container:
+          name: centos7
+          image: centos:7
+          # state: started
+        # register: out_centos
+          command: ["sleep", "1d"]          
+      
+  - name: Print os facts
+    # gather_facts: true
+    hosts: all
+    tasks: 
+      # - name: Print OS
+      #   debug:
+      #     msg: "{{ ansible_distribution }}"
+      #   #when:  docker_container
+
+      - name: Print fact
+        debug:
+          msg: "{{ some_fact }}"
+      
+      # - name: Get facts about containers
+      #   local_action:
+      #     module: docker_facts
+
+      # - name: another facts test
+      #   debug: msg="Container {{ item.key }}"
+      #   with_dict: docker_containers
+  
+  # - name: Print os facts about docker
+  #   # gather_facts: true
+  #   hosts: docker_h
+  #   tasks: 
+  #     - name: Get infos on container
+  #       docker_container_info:
+  #         name: ubuntu
+  #       register: result
+
+  #     - name: Does container exist?
+  #       debug:
+  #         msg: "The container {{ 'exists' if result.exists else 'does not exist' }}"
+
+  #     - name: Print information about container
+  #       debug:
+  #         var: result.container:config:image
+  #       when: result.exists
+
+  - name: Docker stop 
+    hosts: localhost
+    tasks:
+      - name: Centos 
+        docker_container:
+          name: centos
+          image: centos:7
+          state: stopped
+          # command: ["sleep", "1d"]    
+
+      - name: Ubuntu  
+        docker_container:
+          name: ubuntu
+          image: ubuntu:latest
+          state: stopped
+          # command: ["sleep", "1d"]
+ 
