@@ -1,0 +1,4 @@
+---
+kibana_version: "8.4.3"
+kibana_home: "/opt/kibana/{{ kibana_version }}"
+kibana_tar_package: "kibana-8.4.3-linux-x86_64.tar.gz"

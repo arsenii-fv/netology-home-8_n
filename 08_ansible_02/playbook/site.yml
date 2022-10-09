@@ -1,0 +1,174 @@
+---
+- name: Docker create and started
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Centos1_kibana Docker
+      ansible.builtin.docker_container:
+        name: kibana_h
+        image: centos:8 # ubuntu:18.04
+        # state: started
+        command: sleep 10h # ["bin/sh",]
+        # register: result_jdk
+
+    - name: Centos2_elastic Docker
+      ansible.builtin.docker_container:
+        name: elasticsearch_h
+        image: centos:8
+        # state: started
+        command: sleep 10h
+
+- name: Install Java
+  hosts: all
+  become: true
+  remote_user: root
+  gather_facts: false
+  tasks:
+    - name: Set facts for Java 19 vars
+      ansible.builtin.set_fact:
+        java_home: "/opt/jdk/{{ java_jdk_version }}"
+        # mode: 0755
+      tags: java
+    - name: Upload .tar.gz file containing binaries from local storage
+      ansible.builtin.copy:
+        src: "{{ java_oracle_jdk_package }}"
+        dest: "/tmp/jdk-{{ java_jdk_version }}.tar.gz"
+        # owner: root
+        # group: root
+        # remote_src: no
+        mode: 0755
+      register: download_java_binaries
+      until: download_java_binaries is succeeded
+      tags: java
+    - name: Ensure installation dir exists
+      become: true
+      # become_user: root
+      ansible.builtin.file:
+        state: directory
+        path: "{{ java_home }}"
+        # mode: 0755
+      tags: java
+    - name: Extract java in the installation directory
+      become: true
+      ansible.builtin.unarchive:
+        copy: false
+        src: "/tmp/jdk-{{ java_jdk_version }}.tar.gz"
+        dest: "{{ java_home }}"
+        extra_opts: [--strip-components=1]
+        creates: "{{ java_home }}/bin/java"
+      tags:
+        - java
+    - name: Export environment variables
+      become: true
+      ansible.builtin.template:
+        src: jdk.sh.j2
+        dest: /etc/profile.d/jdk.sh
+      tags: java
+
+- name: Install Elasticsearch
+  hosts: elasticsearch
+  remote_user: root
+  gather_facts: false
+  tasks:
+    # - name: Upload tar.gz Elasticsearch from remote URL
+    #   get_url:
+    #     url: "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elastic_version }}-linux-x86_64.tar.gz"
+    #     # "https://sourceforge.net/projects/elasticsearch.mirror/postdownload/Elasticsearch_{{ elastic_version }}.tar.gz"
+    #     # "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-{{ elastic_version }}-linux-x86_64.tar.gz"
+    #     dest: "/tmp/elasticsearch-{{ elastic_version }}-linux-x86_64.tar.gz"
+    #     mode: 0755
+    #     timeout: 60
+    #     force: true
+    #     validate_certs: false
+    #   register: get_elastic
+    #   until: get_elastic is succeeded
+    #   tags: elastic
+    - name: Create directrory for Elasticsearch
+      # become: true
+      ansible.builtin.file:
+        state: directory
+        path: "{{ elastic_home }}"
+      tags: elastic
+    - name: Upload .tar.gz file elasticsearch containing binaries from local storage
+      ansible.builtin.copy:
+        src: "{{ elastic_tar_package }}"
+        dest: "/tmp/elasticsearch-{{ elastic_version }}-linux-x86_64.tar.gz"
+        # owner: root
+        # group: root
+        # remote_src: no
+        mode: 0755
+      register: download_elastic_binaries
+      until: download_elastic_binaries is succeeded
+    - name: Extract Elasticsearch in the installation directory
+      # become: true
+      ansible.builtin.unarchive:
+        copy: false
+        src: "/tmp/elasticsearch-{{ elastic_version }}-linux-x86_64.tar.gz"
+        dest: "{{ elastic_home }}"
+        extra_opts: [--strip-components=1]
+        creates: "{{ elastic_home }}/bin/elasticsearch"
+        mode: 0755
+      tags:
+        - elastic
+    - name: Set environment Elastic
+      become: true
+      ansible.builtin.template:
+        src: templates/elk.sh.j2
+        dest: /etc/profile.d/elk.sh
+      tags: elastic
+
+- name: Install Kibana
+  hosts: kibana
+  remote_user: root
+  gather_facts: false
+  tasks:
+    - name: Create directrory for Kibana
+      ansible.builtin.file:
+        state: directory
+        path: "{{ kibana_home }}"
+        # mode: 0644
+      tags: kibana
+    - name: Upload .tar.gz file kibana containing binaries from local storage
+      ansible.builtin.copy:
+        src: "{{ kibana_tar_package }}"
+        dest: "/tmp/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+        # owner: root
+        # group: root
+        # remote_src: no
+        mode: 0755
+      register: download_kibana_binaries
+      until: download_kibana_binaries is succeeded
+    - name: Extract Kibana in the installation directory
+      # become: true
+      ansible.builtin.unarchive:
+        copy: false
+        src: "/tmp/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+        dest: "{{ kibana_home }}"
+        extra_opts: [--strip-components=1]
+        creates: "{{ kibana_home }}/bin/kibana"
+      tags:
+        - kibana
+    - name: Set environment Kibana
+      become: true
+      ansible.builtin.template:
+        src: templates/kbn.sh.j2
+        dest: /etc/profile.d/kbn.sh.j2 # "{{ kibana_home }}/config/kibana.yml"
+      tags: kibana
+
+- name: Docker destroy
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Centos1_kibana Docker destroy
+      ansible.builtin.docker_container:
+        name: kibana_h
+        image: centos:8 # ubuntu:18.04
+        state: absent
+        # register: result_jdk
+
+    - name: Centos2_elastic Docker destroy
+      ansible.builtin.docker_container:
+        name: elasticsearch_h
+        image: centos:8
+        state: absent
+        command: sleep 10h

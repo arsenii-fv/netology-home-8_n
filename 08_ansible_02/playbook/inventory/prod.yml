@@ -1,0 +1,28 @@
+---
+all:
+  hosts:
+    kibana_h:
+      ansible_connection: docker
+    elasticsearch_h:
+      ansible_connection: docker
+  # vars:
+  #   # ansible_connection: ssh
+  #   # ansible_user: arsen
+  #   ansible_become_user: root
+  #   ansible_become_pass: vas&7021
+  #   ansible_sudo_pass: "vas&7021"
+
+kibana: 
+   hosts:
+     kibana_h:
+elasticsearch:
+   hosts:
+     elasticsearch_h:
+
+# elasticsearch:
+#   hosts:
+#     localhost:
+#       ansible_connection: local # ssh
+#       ansible_user: root
+#                    # arsen
+##--ask-become-pass

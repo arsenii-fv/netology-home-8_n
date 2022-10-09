@@ -1,0 +1,28 @@
+---
+all:
+  hosts:
+    jdk_h:
+      ansible_host: 192.168.1.4 #localhost
+    elasticsearch_h:
+      ansible_host: localhost
+  vars:
+    ansible_connection: ssh
+    ansible_user: arsen
+    ansible_become_user: root
+    ansible_become_pass: vas&7021
+    ansible_sudo_pass: "vas&7021"
+
+jdk: 
+  hosts:
+    jdk_h:
+elasticsearch:
+  hosts:
+    elasticsearch_h:
+
+# elasticsearch:
+#   hosts:
+#     localhost:
+#       ansible_connection: local # ssh
+#       ansible_user: root
+#                    # arsen
+##--ask-become-pass
