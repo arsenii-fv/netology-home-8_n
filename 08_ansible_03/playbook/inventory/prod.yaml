@@ -1,0 +1,28 @@
+---
+all:
+  hosts:
+    host-cl:
+      ansible_host: 51.250.103.190
+    host-vc:
+      ansible_host: 51.250.16.40
+    host-lt:
+      ansible_host: 51.250.20.182
+    vars:
+      ansible_connection: ssh
+      ansible_user: arsen
+      # ansible_ssh_host_key_checking: False
+      # ansible_ssh_user: arsen
+      # ansible_ssh_pass: v54
+      # ansible_ssh_private_key_file: /home/arsen/.ssh/id_rsa.pub
+      # ansible_become_user: root
+      # ansible_become_method: su
+      # ansible_become_password: v12
+clickhouse:
+  hosts:
+    host-cl:
+vector:
+  hosts:
+    host-vc:
+lighthouse:
+  hosts:
+    host-lt:
