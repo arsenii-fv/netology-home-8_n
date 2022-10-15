@@ -1,0 +1,29 @@
+---
+# tasks file for vector_role
+- name: "Ensure installation dir vector"
+  become: true
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ vector_dir }}"
+    - "/opt/vector"
+
+- name: Download vector
+  become: true
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/0.21.2/vector_0.21.2-1_amd64.deb"
+    dest: "{{ vector_dir }}/vector.deb"
+    mode: 0644
+- name: Install vector
+  become: true
+  apt: 
+    deb: "{{ vector_dir }}/vector.deb"
+
+- name: Start_vector_service
+  become: true
+  ansible.builtin.service:
+    name: vector
+    state: restarted
+    enabled: true

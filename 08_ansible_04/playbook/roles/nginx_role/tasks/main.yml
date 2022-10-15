@@ -1,0 +1,11 @@
+---
+# tasks file for nginx_role
+- name: Install nginx
+  become: true
+  apt: 
+    name: nginx
+    state: stable
+
+  # notify: nginx-start
+  notify: nginx-reload
+  
