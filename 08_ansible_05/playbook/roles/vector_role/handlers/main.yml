@@ -1,0 +1,9 @@
+---
+# handlers file for vector_role
+- name: Restart vector
+  become: true
+  ansible.builtin.service:
+    name: vector
+    state: restarted
+  # when: ansible_virtualization_type !="docker"
+  # register: vector_result_restart

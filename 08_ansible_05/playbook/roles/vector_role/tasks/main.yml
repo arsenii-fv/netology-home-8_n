@@ -1,0 +1,12 @@
+---
+- name: Install the correct vector for Centos
+  import_tasks: centos.yml
+  when: ansible_facts['os_family']|lower == "centos"
+
+- name: Install the correct vector for Debian
+  import_tasks: debian.yml
+  when: ansible_facts['os_family']|lower == 'debian'
+
+- name: Install the correct vector for Ubuntu
+  import_tasks: ubuntu.yml
+  when: ansible_facts['os_family']|lower == 'ubuntu'

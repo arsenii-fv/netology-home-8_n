@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include vector_role"
+      ansible.builtin.include_role:
+        name: "vector_role"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3

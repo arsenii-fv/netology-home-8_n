@@ -1,0 +1,4 @@
+---
+# vars file for vector_role
+vector_dir: "/tmp/vector"
+vector_service: "vector.service"

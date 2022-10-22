@@ -1,0 +1,48 @@
+---
+# tasks file for lighthouse_role
+- name: Create directory tmp
+  become: true
+  file: 
+    name: tmp/lighthouse
+    state: directory
+    mode: 0777
+  run_once: true
+  #delegate_to: localhost
+  
+- name: Install nginx
+  become: true
+  apt: 
+    name: nginx
+    state: latest
+  notify: nginx-start
+  
+- name: Add domain
+  become: true
+  template:
+    src: lighthouse_nginx.j2
+    dest: /etc/nginx/sites-enabled/default 
+       
+- name: Install lighthouse
+  become: true
+  ansible.builtin.get_url:
+    url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.zip"
+    dest: "tmp/lighthouse/master.zip"
+    #remote_src: yes
+    mode: 0644
+
+- name: Creating directory
+  become: true
+  file:
+   path: "/opt/lighthouse"
+   state: directory
+   mode: 0777
+
+- name: Extract lighthouse
+  become: true
+  unarchive:
+    remote_src: yes 
+    src: "tmp/lighthouse/master.zip"
+    dest: "/opt/lighthouse"
+
+  notify: nginx-reload
+  

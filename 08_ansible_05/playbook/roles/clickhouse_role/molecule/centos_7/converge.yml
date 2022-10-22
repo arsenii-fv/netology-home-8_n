@@ -1,0 +1,10 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ansible-clickhouse"
+      include_role:
+        name: "clickhouse_role" 
+        # "ansible-clickhouse"
+  vars:
+    ansible_python_interpreter: /usr/bin/python3

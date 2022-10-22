@@ -1,0 +1,17 @@
+---
+# tasks file for nginx_role
+- name: Install nginx
+  become: true
+  apt: 
+    name: nginx
+    state: stable
+  
+- name: Add domain
+  become: true
+  template:
+    src: lighthouse_nginx.j2
+    dest: /etc/nginx/sites-enabled/default 
+
+  # notify: nginx-start
+  notify: nginx-reload
+  
