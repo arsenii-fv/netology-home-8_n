@@ -1,0 +1,32 @@
+---
+- name: Ensure installation dir vector
+  become: true
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0777
+  with_items:
+    - "{{ vector_dir }}"
+    - "/opt/vector"
+
+- name: Download vector
+  become: true
+  ansible.builtin.get_url:
+    url: "https://packages.timber.io/vector/0.21.2/vector-0.21.2-1_x86_64.rpm"
+     #  https://packages.timber.io/vector/0.21.2/vector-0.21.2-1.x86_64.rpm
+    dest: "{{ vector_dir }}/vector.rpm"
+    mode: 0644
+- name: Install vector
+  become: true
+  ansible.builtin.yum: 
+    name: "{{ vector_dir }}/vector.rpm"
+    state: present
+  # notify: Restart vector
+
+- name: Start_vector_service
+  become: true
+  ansible.builtin.service:
+    name: vector
+    state: restarted
+  register: vector_result  
+#     enabled: true

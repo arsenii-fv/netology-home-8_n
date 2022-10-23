@@ -1,0 +1,36 @@
+---
+# This is an example playbook to execute Ansible tests.
+- name: Verify
+  hosts: all
+  gather_facts: false
+  # become: true
+  tasks:
+    - name: Find file config
+      ansible.builtin.find:
+        path: /opt/vector/
+        excludes: "vector.toml"
+      register: vector_result
+
+    # - name: Show status
+    #   ansible.builtin.fail:
+    #     msg: "{{ vector_result }}"
+
+    # - name: Assert Vector Service
+    #   ansible.builtin.assert:
+    #     that:
+    #       - "{{ vector_result }} == 'vector.toml'"
+    #     # - "'vector.service' in ansible_facts.services"
+        # - "'running' == ansible_facts.services[vector].state"
+        # - "'running' == ansible_facts.services[vector_result].state"
+#       - "'enabled' == ansible_facts.services[vector_service].status"  
+
+  #  - name: Include role vector # Example assertion
+  #    ansible.builtin.include_role:
+  #      name: vector_role
+  # - name: Status vector
+  #   ansible.builtin.command: "systemctl vector.service status"
+  #   register: vector_result
+#
+  
+#
+  
